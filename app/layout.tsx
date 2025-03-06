@@ -1,20 +1,20 @@
-import type { Metadata } from 'next'
-import './globals.css'
+import type { Metadata } from "next";
+import "./globals.css";
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.dev',
-}
+  title: "Tố Quyên | Dịch vụ phun xăm chuyên nghiệp",
+  description:
+    "Dịch vụ xăm môi thẩm mỹ chuyên nghiệp tại Kon Tum. Tố Quyên - Nơi tôn vinh vẻ đẹp tự nhiên của đôi môi bạn.",
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="vi">
       <body>{children}</body>
     </html>
-  )
+  );
 }
