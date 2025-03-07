@@ -9,6 +9,13 @@ export async function POST(req: Request) {
     const data = await req.json();
     const { name, phone, service, message, email } = data;
 
+    // Log environment variables (sẽ hiện trong Vercel logs)
+    console.log("Environment check:", {
+      hasTelegramToken: !!process.env.TELEGRAM_BOT_TOKEN,
+      hasChatId: !!process.env.TELEGRAM_CHAT_ID,
+      hasGoogleUrl: !!process.env.GOOGLE_APPS_SCRIPT_URL,
+    });
+
     // Validate input
     if (!name || !phone || !service) {
       return NextResponse.json(
@@ -27,27 +34,39 @@ export async function POST(req: Request) {
 🔗 Email: ${email || "Không có"}
     `.trim();
 
-    // Send to Telegram
-    const telegramResponse = await fetch(
-      `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
-      {
+    // Gửi Telegram với nhiều logging hơn
+    if (process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID) {
+      console.log("Starting Telegram send...");
+
+      const telegramUrl = `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`;
+      console.log(
+        "Telegram URL (partial):",
+        telegramUrl.substring(0, 50) + "..."
+      );
+
+      const telegramResponse = await fetch(telegramUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          chat_id: TELEGRAM_CHAT_ID,
+          chat_id: process.env.TELEGRAM_CHAT_ID,
           text: telegramMessage,
         }),
-      }
-    );
+      });
 
-    if (!telegramResponse.ok) {
-      throw new Error("Failed to send Telegram message");
+      console.log("Telegram response status:", telegramResponse.status);
+      const telegramData = await telegramResponse.json();
+      console.log("Telegram API response:", telegramData);
+
+      if (!telegramResponse.ok) {
+        throw new Error(`Telegram API Error: ${JSON.stringify(telegramData)}`);
+      }
     }
 
-    // Send to Google Sheets using Google Apps Script Web App
+    // Gửi Google Sheets với logging
     if (process.env.GOOGLE_APPS_SCRIPT_URL) {
+      console.log("Starting Google Sheets send...");
       const sheetsResponse = await fetch(process.env.GOOGLE_APPS_SCRIPT_URL, {
         method: "POST",
         headers: {
@@ -63,20 +82,23 @@ export async function POST(req: Request) {
         }),
       });
 
-      console.log("Google Sheets response:", await sheetsResponse.text());
-
-      if (!sheetsResponse.ok) {
-        console.error("Failed to send to Google Sheets");
-      }
+      console.log("Google Sheets response status:", sheetsResponse.status);
+      const sheetsData = await sheetsResponse.text();
+      console.log("Google Sheets response:", sheetsData);
     }
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error sending form:", error);
-    const errorMessage =
-      error instanceof Error ? error.message : "Unknown error";
+    console.error("Full error details:", {
+      message: error instanceof Error ? error.message : "Unknown error",
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+
     return NextResponse.json(
-      { error: "Không thể gửi form. Vui lòng thử lại sau." },
+      {
+        error: "Không thể gửi form. Vui lòng thử lại sau.",
+        details: error instanceof Error ? error.message : String(error),
+      },
       { status: 500 }
     );
   }
