@@ -17,6 +17,7 @@ import StatsSection from "@/components/stats-section";
 import AnimatedLogo from "@/components/animated-logo";
 import PageTransition from "@/components/page-transition";
 import Image from "next/image";
+import SmoothScroll from "@/components/smooth-scroll";
 export default function Home() {
   const contactInfo = {
     phone: "0337 835 385",
@@ -28,6 +29,7 @@ export default function Home() {
 
   return (
     <PageTransition>
+      <SmoothScroll />
       <div className="flex flex-col min-h-screen">
         <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <div className="container flex h-16 items-center justify-between">
@@ -108,8 +110,8 @@ export default function Home() {
                   </FadeIn>
                   <FadeIn direction="down" delay={0.4}>
                     <p className="text-lg md:text-xl text-muted-foreground">
-                      Tôn lên vẻ đẹp tự nhiên của đôi môi bạn với công nghệ xăm
-                      môi hiện đại, an toàn và bền màu.
+                      Tôn lên vẻ đẹp tự nhiên của đôi môi bạn với công nghệ phun
+                      xăm hiện đại, an toàn và bền màu.
                     </p>
                   </FadeIn>
                   <FadeIn direction="up" delay={0.6}>
@@ -180,11 +182,12 @@ export default function Home() {
               <FadeIn>
                 <div className="text-center max-w-3xl mx-auto mb-12">
                   <h2 className="text-3xl font-bold tracking-tight mb-4">
-                    Dịch vụ xăm môi của chúng tôi
+                    Dịch vụ phun xăm của chúng tôi
                   </h2>
                   <p className="text-muted-foreground">
-                    Chúng tôi cung cấp các dịch vụ xăm môi chất lượng cao, sử
-                    dụng công nghệ hiện đại và mực xăm an toàn.
+                    Chúng tôi cung cấp các dịch vụ phun xăm chất lượng cao, cam
+                    kết không xưng, sử dụng công nghệ hiện đại và mực xăm an
+                    toàn.
                   </p>
                 </div>
               </FadeIn>
@@ -192,26 +195,26 @@ export default function Home() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                   <StaggerItem>
                     <ServiceCard
-                      title="Xăm môi collagen"
-                      description="Phương pháp xăm môi tự nhiên, giúp môi hồng hào, căng mọng với hiệu ứng collagen."
+                      title="Phun xăm môi"
+                      description="Giúp đôi môi hồng hào tự nhiên, cân đối và quyến rũ. Công nghệ phun xăm hiện đại giúp môi lên màu đều, tự nhiên và bền màu."
                       price="2.500.000 VNĐ"
-                      image="/placeholder.svg?height=300&width=400"
+                      image="/lip.jpg"
                     />
                   </StaggerItem>
                   <StaggerItem>
                     <ServiceCard
-                      title="Xăm môi pha lê"
-                      description="Tạo hiệu ứng bóng mượt như pha lê, giúp đôi môi luôn tươi tắn, rạng rỡ."
+                      title="Phun xăm chân mày"
+                      description="Tạo dáng chân mày sắc nét, tự nhiên theo từng khuôn mặt. Kỹ thuật phun xăm chuyên nghiệp giúp từng sợi mày được định hình rõ ràng, không bị đơ cứng."
                       price="3.000.000 VNĐ"
-                      image="/placeholder.svg?height=300&width=400"
+                      image="/phun-theu-chan-may.jpg"
                     />
                   </StaggerItem>
                   <StaggerItem>
                     <ServiceCard
-                      title="Phun môi thẩm mỹ"
-                      description="Tạo viền môi sắc nét, màu sắc tự nhiên, phù hợp với từng khách hàng."
+                      title="Phun xăm mí"
+                      description="Tạo đường viền mí mắt sắc nét, giúp đôi mắt to tròn và quyến rũ hơn. Công nghệ phun xăm an toàn, không gây đau rát, giúp đường mí đẹp tự nhiên"
                       price="2.800.000 VNĐ"
-                      image="/placeholder.svg?height=300&width=400"
+                      image="/xam-mi.jpg"
                     />
                   </StaggerItem>
                 </div>
@@ -225,7 +228,7 @@ export default function Home() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                 <Parallax speed={-0.2}>
                   <img
-                    src="/placeholder.svg?height=500&width=600"
+                    src="/phun-xam.jpg"
                     alt="Về chúng tôi"
                     className="rounded-lg shadow-lg"
                   />
@@ -236,7 +239,7 @@ export default function Home() {
                       Về chúng tôi
                     </h2>
                     <p className="text-muted-foreground">
-                      Với hơn 10 năm kinh nghiệm trong lĩnh vực xăm môi thẩm mỹ,
+                      Với nhiều năm kinh nghiệm trong lĩnh vực phun xăm thẩm mỹ,
                       chúng tôi tự hào mang đến cho khách hàng những dịch vụ
                       chất lượng cao, an toàn và hiệu quả.
                     </p>
@@ -260,8 +263,8 @@ export default function Home() {
                             <polyline points="20 6 9 17 4 12" />
                           </svg>
                           <span>
-                            Đội ngũ chuyên gia có chứng chỉ và nhiều năm kinh
-                            nghiệm
+                            Với nhiều năm kinh nghiệm, cam kết không xưng, tỉ mỉ
+                            và chất lượng cao
                           </span>
                         </li>
                       </StaggerItem>
@@ -486,11 +489,11 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
               <div className="space-y-4">
                 <Link href="/" className="flex items-center gap-2">
-                  <span className="text-xl font-bold">BeautyLips</span>
+                  <span className="text-xl font-bold">Tố Quyên</span>
                 </Link>
                 <p className="text-sm text-muted-foreground">
-                  Chuyên cung cấp dịch vụ xăm môi chất lượng cao, an toàn và
-                  hiệu quả.
+                  Chuyên cung cấp dịch vụ phun xăm thẩm mỹ chất lượng cao, an
+                  toàn và hiệu quả.
                 </p>
               </div>
               <div>
@@ -501,7 +504,7 @@ export default function Home() {
                       href="#"
                       className="text-muted-foreground hover:text-foreground"
                     >
-                      Xăm môi collagen
+                      Phun xăm môi
                     </Link>
                   </li>
                   <li>
@@ -509,7 +512,7 @@ export default function Home() {
                       href="#"
                       className="text-muted-foreground hover:text-foreground"
                     >
-                      Xăm môi pha lê
+                      Phun xăm chân mày
                     </Link>
                   </li>
                   <li>
@@ -517,15 +520,7 @@ export default function Home() {
                       href="#"
                       className="text-muted-foreground hover:text-foreground"
                     >
-                      Phun môi thẩm mỹ
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="#"
-                      className="text-muted-foreground hover:text-foreground"
-                    >
-                      Điêu khắc môi
+                      Phun xăm mí
                     </Link>
                   </li>
                 </ul>
