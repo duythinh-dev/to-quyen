@@ -36,7 +36,7 @@ export default function Home() {
               alt="Logo"
               width={1000}
               height={300}
-              className="w-32 h-10"
+              className="w-32 h-10 rounded-xl"
             />
             <nav className="hidden md:flex gap-6">
               <Link
@@ -98,18 +98,12 @@ export default function Home() {
           {/* Hero Section */}
           <section className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-pink-500/20 to-purple-500/20" />
-            <div
-              className="relative h-[600px] bg-cover bg-center"
-              style={{
-                backgroundImage:
-                  "url('/placeholder.svg?height=600&width=1200')",
-              }}
-            >
+            <div className="relative h-[600px] bg-cover bg-center bg-[url('/main-mb.jpg')] sm:bg-[url('/main.png')]">
               <div className="container h-full flex flex-col justify-center">
                 <div className="max-w-2xl space-y-4">
                   <FadeIn direction="down" delay={0.2}>
                     <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-                      Dịch vụ xăm môi chuyên nghiệp
+                      Dịch vụ phun xăm chuyên nghiệp
                     </h1>
                   </FadeIn>
                   <FadeIn direction="down" delay={0.4}>
