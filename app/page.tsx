@@ -18,6 +18,8 @@ import AnimatedLogo from "@/components/animated-logo";
 import PageTransition from "@/components/page-transition";
 import Image from "next/image";
 import SmoothScroll from "@/components/smooth-scroll";
+import MobileMenu from "@/components/mobile-menu";
+import PromotionsBanner from "@/components/promotions-banner";
 export default function Home() {
   const contactInfo = {
     phone: "0337 835 385",
@@ -75,25 +77,7 @@ export default function Home() {
             <Button asChild className="hidden md:inline-flex">
               <Link href="#contact">Đặt lịch ngay</Link>
             </Button>
-            <Button variant="outline" size="icon" className="md:hidden">
-              <span className="sr-only">Toggle menu</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="h-6 w-6"
-              >
-                <line x1="4" x2="20" y1="12" y2="12" />
-                <line x1="4" x2="20" y1="6" y2="6" />
-                <line x1="4" x2="20" y1="18" y2="18" />
-              </svg>
-            </Button>
+            <MobileMenu />
           </div>
         </header>
         <main className="flex-1">
@@ -175,6 +159,7 @@ export default function Home() {
 
           {/* Stats Section */}
           {/* <StatsSection /> */}
+          <PromotionsBanner />
 
           {/* Services Section */}
           <section id="services" className="py-16 md:py-24">
@@ -197,24 +182,30 @@ export default function Home() {
                     <ServiceCard
                       title="Phun xăm môi"
                       description="Giúp đôi môi hồng hào tự nhiên, cân đối và quyến rũ. Công nghệ phun xăm hiện đại giúp môi lên màu đều, tự nhiên và bền màu."
-                      price="2.500.000 VNĐ"
+                      price="999.000 VNĐ"
                       image="/lip.jpg"
+                      originalPrice="1.300.000 VNĐ"
+                      isPromotion
                     />
                   </StaggerItem>
                   <StaggerItem>
                     <ServiceCard
                       title="Phun xăm chân mày"
                       description="Tạo dáng chân mày sắc nét, tự nhiên theo từng khuôn mặt. Kỹ thuật phun xăm chuyên nghiệp giúp từng sợi mày được định hình rõ ràng, không bị đơ cứng."
-                      price="3.000.000 VNĐ"
+                      price="499.000 VNĐ"
                       image="/phun-theu-chan-may.jpg"
+                      originalPrice="700.000 VNĐ"
+                      isPromotion
                     />
                   </StaggerItem>
                   <StaggerItem>
                     <ServiceCard
                       title="Phun xăm mí"
                       description="Tạo đường viền mí mắt sắc nét, giúp đôi mắt to tròn và quyến rũ hơn. Công nghệ phun xăm an toàn, không gây đau rát, giúp đường mí đẹp tự nhiên"
-                      price="2.800.000 VNĐ"
+                      price="199.000 VNĐ"
+                      originalPrice="300.000 VNĐ"
                       image="/xam-mi.jpg"
+                      isPromotion
                     />
                   </StaggerItem>
                 </div>
