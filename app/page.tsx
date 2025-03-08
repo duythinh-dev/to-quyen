@@ -171,8 +171,8 @@ export default function Home() {
                   </h2>
                   <p className="text-muted-foreground">
                     Chúng tôi cung cấp các dịch vụ phun xăm chất lượng cao, cam
-                    kết không xưng, sử dụng công nghệ hiện đại và mực xăm an
-                    toàn.
+                    kết không sưng, tỉ mỉ sử dụng công nghệ hiện đại và mực xăm
+                    an toàn.
                   </p>
                 </div>
               </FadeIn>
@@ -181,7 +181,7 @@ export default function Home() {
                   <StaggerItem>
                     <ServiceCard
                       title="Phun xăm môi"
-                      description="Giúp đôi môi hồng hào tự nhiên, cân đối và quyến rũ. Công nghệ phun xăm hiện đại giúp môi lên màu đều, tự nhiên và bền màu."
+                      description="Giúp đôi môi cân đối và quyến rũ hơn. Với Công nghệ phun xăm hiện đại giúp môi lên màu tươi tắn và mịn màng. Đa dạng màu sắc phù hợp với từng độ tuổi ,từng màu da của khách hàng"
                       price="999.000 VNĐ"
                       image="/lip.jpg"
                       originalPrice="1.500.000 VNĐ"
@@ -254,8 +254,8 @@ export default function Home() {
                             <polyline points="20 6 9 17 4 12" />
                           </svg>
                           <span>
-                            Với nhiều năm kinh nghiệm, cam kết không xưng, tỉ mỉ
-                            và chất lượng cao
+                            Với nhiều năm kinh nghiệm, cam kết không đau,không
+                            sưng, tỉ mỉ là chất lượng cao
                           </span>
                         </li>
                       </StaggerItem>
