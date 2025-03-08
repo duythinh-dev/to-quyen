@@ -90,14 +90,14 @@ export default function PromotionsBanner() {
                     </div>
                     <p>
                       Giảm{" "}
-                      <span className="font-bold text-primary">300.000đ</span>{" "}
-                      dịch vụ{" "}
                       <span className="font-bold text-primary">
-                        Phun xăm môi
-                      </span>
+                        30% đến 50%
+                      </span>{" "}
+                      dịch vụ{" "}
+                      <span className="font-bold text-primary">Phun xăm</span>
                     </p>
                   </div>
-                  <div className="flex items-start gap-3">
+                  {/* <div className="flex items-start gap-3">
                     <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 mt-0.5">
                       <Gift className="h-3 w-3 text-primary" />
                     </div>
@@ -122,7 +122,7 @@ export default function PromotionsBanner() {
                         Phun xăm mí
                       </span>
                     </p>
-                  </div>
+                  </div> */}
                 </div>
               </FadeIn>
 
