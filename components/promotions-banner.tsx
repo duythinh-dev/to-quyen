@@ -89,10 +89,7 @@ export default function PromotionsBanner() {
                       <Gift className="h-3 w-3 text-primary" />
                     </div>
                     <p>
-                      Giảm{" "}
-                      <span className="font-bold text-primary">
-                        30% đến 50%
-                      </span>{" "}
+                      Giảm <span className="font-bold text-primary">50%</span>{" "}
                       dịch vụ{" "}
                       <span className="font-bold text-primary">Phun xăm</span>
                     </p>
@@ -166,7 +163,7 @@ export default function PromotionsBanner() {
                   transition={{ duration: 5, repeat: Number.POSITIVE_INFINITY }}
                 >
                   <div>
-                    <div className="text-2xl">-30%</div>
+                    <div className="text-2xl">-50%</div>
                     <div className="text-xs">Chỉ 3 tuần</div>
                   </div>
                 </motion.div>
