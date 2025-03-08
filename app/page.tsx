@@ -184,7 +184,7 @@ export default function Home() {
                       description="Giúp đôi môi hồng hào tự nhiên, cân đối và quyến rũ. Công nghệ phun xăm hiện đại giúp môi lên màu đều, tự nhiên và bền màu."
                       price="999.000 VNĐ"
                       image="/lip.jpg"
-                      originalPrice="1.300.000 VNĐ"
+                      originalPrice="1.500.000 VNĐ"
                       isPromotion
                     />
                   </StaggerItem>
