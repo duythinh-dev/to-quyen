@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     "phun xăm mày",
   ],
   openGraph: {
-    title: "Tố Quyên | Dịch vụ phun xăm chuyên nghiệp tại Kon Tum",
+    title: "Tố Quyên | Dịch vụ phun xăm chuyên nghiệp tại Sa Thầy - Kon Tum",
     description:
       "Dịch vụ xăm môi thẩm mỹ chuyên nghiệp tại Sa Thầy - Kon Tum. Tố Quyên - Nơi tôn vinh vẻ đẹp tự nhiên của đôi môi bạn.",
     url: "https://toquyen.vercel.app",
