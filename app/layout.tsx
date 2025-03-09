@@ -41,6 +41,14 @@ export const metadata: Metadata = {
     siteName: "Tố Quyên Beauty",
     locale: "vi_VN",
     type: "website",
+    images: [
+      {
+        url: "/logo-main.png",
+        width: 639,
+        height: 630,
+        alt: "Tố Quyên Beauty - Dịch vụ phun xăm chuyên nghiệp",
+      },
+    ],
   },
   robots: {
     index: true,
