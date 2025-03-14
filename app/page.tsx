@@ -159,7 +159,7 @@ export default function Home() {
 
           {/* Stats Section */}
           {/* <StatsSection /> */}
-          <PromotionsBanner />
+          {/* <PromotionsBanner /> */}
 
           {/* Services Section */}
           <section id="services" className="py-16 md:py-24">
