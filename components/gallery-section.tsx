@@ -1,81 +1,40 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 
+interface ImageItem {
+  src: string;
+  alt: string;
+  category: string;
+  type: string;
+}
+
 export default function GallerySection() {
   const [open, setOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState("");
+  const [images, setImages] = useState<ImageItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  console.log("images", images);
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/customer-images`
+        );
+        const data = await response.json();
+        setImages(data);
+      } catch (error) {
+        console.error("Error fetching images:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const images = [
-    {
-      src: "/afterbf-moi-1.png",
-      alt: "Xăm môi trước và sau 1",
-      category: "Trước và sau",
-    },
-    {
-      src: "/afterbf-moi-2.png",
-      alt: "Xăm môi trước và sau 2",
-      category: "Trước và sau",
-    },
-    {
-      src: "/afterbf-may-1.png",
-      alt: "Phun xăm mày trước và sau 1",
-      category: "Trước và sau",
-    },
-    {
-      src: "/moi-1.jpg",
-      alt: "Phun xăm môi 2",
-      category: "Phun xăm môi",
-    },
-    {
-      src: "/moi-2.jpg",
-      alt: "Phun xăm môi 2",
-      category: "Phun xăm môi",
-    },
-    {
-      src: "/moi-3.jpg",
-      alt: "Phun xăm môi 3",
-      category: "Phun xăm môi",
-    },
-    {
-      src: "/moi-4.jpg",
-      alt: "Phun xăm môi 4",
-      category: "Phun xăm môi",
-    },
-    {
-      src: "/moi-5.jpg",
-      alt: "Phun xăm môi 5",
-      category: "Phun xăm môi",
-    },
-    {
-      src: "/may-mi.jpg",
-      alt: "Phun xăm mày 1",
-      category: "Phun xăm mày",
-    },
-    {
-      src: "/may-2.jpg",
-      alt: "Phun xăm mày 2",
-      category: "Phun xăm mày",
-    },
-    {
-      src: "/mi-1.jpg",
-      alt: "Phun xăm mí 1",
-      category: "Phun xăm mí",
-    },
-    {
-      src: "/mi-2.webp",
-      alt: "Phun xăm mí 2",
-      category: "Phun xăm mí",
-    },
-    {
-      src: "/mi-3.jpg",
-      alt: "Phun xăm mí 3",
-      category: "Phun xăm mí",
-    },
-  ];
+    fetchImages();
+  }, []);
 
   const categories = [
     "Tất cả",
@@ -89,7 +48,12 @@ export default function GallerySection() {
   const filteredImages =
     activeCategory === "Tất cả"
       ? images
-      : images.filter((image) => image.category === activeCategory);
+      : images.filter((image) => {
+          if (activeCategory === "Trước và sau") {
+            return image.type === "before-after";
+          }
+          return image.category.toLowerCase() === activeCategory.toLowerCase();
+        });
 
   const openImage = (src: string) => {
     setSelectedImage(src);
@@ -115,21 +79,25 @@ export default function GallerySection() {
         ))}
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {filteredImages.map((image, index) => (
-          <div
-            key={index}
-            className="overflow-hidden rounded-lg cursor-pointer"
-            onClick={() => openImage(image.src)}
-          >
-            <Image
-              src={image.src || "/placeholder.svg"}
-              alt={image.alt}
-              className="w-full h-64 object-cover transition-transform hover:scale-105"
-              width={500}
-              height={500}
-            />
-          </div>
-        ))}
+        {loading ? (
+          <div className="col-span-full text-center py-10">Đang tải...</div>
+        ) : (
+          filteredImages.map((image, index) => (
+            <div
+              key={index}
+              className="overflow-hidden rounded-lg cursor-pointer"
+              onClick={() => openImage(image.src)}
+            >
+              <Image
+                src={image.src || "/placeholder.svg"}
+                alt={image.alt}
+                className="w-full h-64 object-cover transition-transform hover:scale-105"
+                width={500}
+                height={500}
+              />
+            </div>
+          ))
+        )}
       </div>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-3xl p-0 overflow-hidden">

@@ -1,9 +1,5 @@
 import { NextResponse } from "next/server";
 
-// Thay thế các giá trị này bằng thông tin của bạn
-const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
-
 export async function POST(req: Request) {
   try {
     const data = await req.json();

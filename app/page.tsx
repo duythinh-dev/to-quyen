@@ -20,13 +20,26 @@ import Image from "next/image";
 import SmoothScroll from "@/components/smooth-scroll";
 import MobileMenu from "@/components/mobile-menu";
 import PromotionsBanner from "@/components/promotions-banner";
-export default function Home() {
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import ServiceSection from "@/components/service-section";
+
+export default async function Home() {
   const contactInfo = {
     phone: "0337 835 385",
     address: "40B Lê Duẩn, Huyện Sa Thầy, Kon Tum",
     businessHours: "T2-CN: 8:30 - 17:30",
     name: "Tố Quyên",
     facebook: "https://www.facebook.com/to.quyen.490388",
+  };
+
+  // Helper function to format price
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+      minimumFractionDigits: 0,
+    }).format(price);
   };
 
   return (
@@ -162,56 +175,7 @@ export default function Home() {
           {/* <PromotionsBanner /> */}
 
           {/* Services Section */}
-          <section id="services" className="py-16 md:py-24">
-            <div className="container">
-              <FadeIn>
-                <div className="text-center max-w-3xl mx-auto mb-12">
-                  <h2 className="text-3xl font-bold tracking-tight mb-4">
-                    Dịch vụ phun xăm của chúng tôi
-                  </h2>
-                  <p className="text-muted-foreground">
-                    Chúng tôi cung cấp các dịch vụ phun xăm chất lượng cao, cam
-                    kết không sưng, tỉ mỉ sử dụng công nghệ hiện đại và mực xăm
-                    an toàn.
-                  </p>
-                </div>
-              </FadeIn>
-              <StaggerContainer>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  <StaggerItem>
-                    <ServiceCard
-                      title="Phun xăm môi"
-                      description="Giúp đôi môi cân đối và quyến rũ hơn. Với Công nghệ phun xăm hiện đại giúp môi lên màu tươi tắn và mịn màng. Đa dạng màu sắc phù hợp với từng độ tuổi ,từng màu da của khách hàng"
-                      price="999.000 VNĐ"
-                      image="/lip.jpg"
-                      originalPrice="1.500.000 VNĐ"
-                      isPromotion
-                    />
-                  </StaggerItem>
-                  <StaggerItem>
-                    <ServiceCard
-                      title="Phun xăm chân mày"
-                      description="Tạo dáng chân mày sắc nét, tự nhiên theo từng khuôn mặt. Kỹ thuật phun xăm chuyên nghiệp giúp từng sợi mày được định hình rõ ràng, không bị đơ cứng."
-                      price="499.000 VNĐ"
-                      image="/phun-theu-chan-may.jpg"
-                      originalPrice="700.000 VNĐ"
-                      isPromotion
-                    />
-                  </StaggerItem>
-                  <StaggerItem>
-                    <ServiceCard
-                      title="Phun xăm mí"
-                      description="Tạo đường viền mí mắt sắc nét, giúp đôi mắt to tròn và quyến rũ hơn. Công nghệ phun xăm an toàn, không gây đau rát, giúp đường mí đẹp tự nhiên"
-                      price="199.000 VNĐ"
-                      originalPrice="300.000 VNĐ"
-                      image="/xam-mi.jpg"
-                      isPromotion
-                    />
-                  </StaggerItem>
-                </div>
-              </StaggerContainer>
-            </div>
-          </section>
+          <ServiceSection />
 
           {/* About Section */}
           <section id="about" className="py-16 md:py-24 bg-muted/30">
