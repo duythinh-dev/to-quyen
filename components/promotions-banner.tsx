@@ -5,8 +5,72 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Gift, Sparkles } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { Promotion } from "@/types";
 
 export default function PromotionsBanner() {
+  const [promotion, setPromotion] = useState<Promotion | null>(null);
+
+  useEffect(() => {
+    const fetchPrm = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/promotions/active`,
+          {
+            method: "GET",
+          }
+        );
+        const promotionDetails = await response.json();
+        //   {
+        //     "_id": "67e60e7574aac3b8c83a7138",
+        //     "title": "Happy Weekend - Ưu đãi cuối tuần",
+        //     "description": "Để cuối tuần của bạn thêm trọn vẹn, chúng tôi mang đến ưu đãi đặc biệt giảm đến 30% cho tất cả các dịch vụ vào Thứ 7 và Chủ nhật.",
+        //     "details": [
+        //         "Áp dụng cho tất cả khách hàng vào T7-CN",
+        //         "Không áp dụng cùng các chương trình khuyến mãi khác",
+        //         "Cần đặt lịch trước để đảm bảo slot"
+        //     ],
+        //     "startDate": "2025-03-28T00:00:00.000Z",
+        //     "endDate": "2025-04-28T00:00:00.000Z",
+        //     "serviceDiscounts": [
+        //         {
+        //             "serviceId": "67e60adb74aac3b8c83a70a0",
+        //             "originalPrice": 1500000,
+        //             "discountedPrice": 999000,
+        //             "_id": "67e6120e74aac3b8c83a71ba"
+        //         },
+        //         {
+        //             "serviceId": "67e60b0674aac3b8c83a70a4",
+        //             "originalPrice": 700000,
+        //             "discountedPrice": 499000,
+        //             "_id": "67e6120e74aac3b8c83a71bb"
+        //         },
+        //         {
+        //             "serviceId": "67e60b2674aac3b8c83a70a8",
+        //             "originalPrice": 300000,
+        //             "discountedPrice": 199000,
+        //             "_id": "67e6120e74aac3b8c83a71bc"
+        //         }
+        //     ],
+        //     "status": "active",
+        //     "isApplied": false,
+        //     "createdAt": "2025-03-28T02:50:29.569Z",
+        //     "updatedAt": "2025-03-28T03:05:50.168Z",
+        //     "displayDiscountPercent": 34,
+        //     "__v": 0
+        // }
+        setPromotion(promotionDetails);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchPrm();
+  }, []);
+
+  // Get promotion active
+  if (!promotion) return null;
+
   return (
     <section id="promotions" className="py-12 relative overflow-hidden">
       {/* Background with gradient */}
@@ -73,53 +137,23 @@ export default function PromotionsBanner() {
                   <span>Ưu đãi đặc biệt</span>
                 </div>
                 <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
-                  Chúc mừng ngày Quốc tế Phụ nữ
-                  <span className="text-primary"> 08/03</span>
+                  {promotion.title}
                 </h2>
                 <p className="text-muted-foreground text-lg">
-                  Nhân dịp 8/3, Tố Quyên Beauty dành tặng chị em những ưu đãi
-                  đặc biệt để tôn vinh vẻ đẹp tự nhiên của người phụ nữ Việt.
+                  {promotion.description}
                 </p>
               </FadeIn>
 
               <FadeIn direction="up" delay={0.2}>
                 <div className="space-y-4">
-                  <div className="flex items-start gap-3">
-                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 mt-0.5">
-                      <Gift className="h-3 w-3 text-primary" />
+                  {promotion.details.map((detail, index) => (
+                    <div className="flex items-start gap-3" key={index}>
+                      <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 mt-0.5">
+                        <Gift className="h-3 w-3 text-primary" />
+                      </div>
+                      <p>{detail}</p>
                     </div>
-                    <p>
-                      Giảm <span className="font-bold text-primary">50%</span>{" "}
-                      dịch vụ{" "}
-                      <span className="font-bold text-primary">Phun xăm</span>
-                    </p>
-                  </div>
-                  {/* <div className="flex items-start gap-3">
-                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 mt-0.5">
-                      <Gift className="h-3 w-3 text-primary" />
-                    </div>
-                    <p>
-                      Giảm{" "}
-                      <span className="font-bold text-primary">300.000đ</span>{" "}
-                      dịch vụ{" "}
-                      <span className="font-bold text-primary">
-                        Phun xăm chân mày
-                      </span>
-                    </p>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 mt-0.5">
-                      <Gift className="h-3 w-3 text-primary" />
-                    </div>
-                    <p>
-                      Giảm{" "}
-                      <span className="font-bold text-primary">100.000đ</span>{" "}
-                      dịch vụ{" "}
-                      <span className="font-bold text-primary">
-                        Phun xăm mí
-                      </span>
-                    </p>
-                  </div> */}
+                  ))}
                 </div>
               </FadeIn>
 
@@ -134,8 +168,15 @@ export default function PromotionsBanner() {
                   </Button>
                   <div className="bg-background/80 backdrop-blur px-4 py-2 rounded-lg border border-primary/20 text-sm">
                     Chương trình kéo dài từ{" "}
-                    <span className="font-bold">22/02</span> đến{" "}
-                    <span className="font-bold">10/03/2025</span>
+                    <span className="font-bold">
+                      {new Date(promotion.startDate).toLocaleDateString(
+                        "vi-VN"
+                      )}
+                    </span>{" "}
+                    đến{" "}
+                    <span className="font-bold">
+                      {new Date(promotion.endDate).toLocaleDateString("vi-VN")}
+                    </span>
                   </div>
                 </div>
               </FadeIn>
@@ -146,15 +187,10 @@ export default function PromotionsBanner() {
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-500 to-purple-500 rounded-2xl blur opacity-30"></div>
                 <div className="relative bg-background rounded-2xl overflow-hidden">
                   <img
-                    src="/promotion-8-3.png"
-                    alt="Chúc mừng ngày 8/3"
-                    className="w-full h-auto object-cover"
+                    src={promotion.image || "/promotion-8-3.png"}
+                    alt={promotion.title}
+                    className="w-full aspect-square object-cover"
                   />
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6 text-white">
-                    <p className="font-bold text-xl">
-                      Tôn vinh vẻ đẹp phụ nữ Việt
-                    </p>
-                  </div>
                 </div>
 
                 <motion.div
@@ -163,8 +199,10 @@ export default function PromotionsBanner() {
                   transition={{ duration: 5, repeat: Number.POSITIVE_INFINITY }}
                 >
                   <div>
-                    <div className="text-2xl">-50%</div>
-                    <div className="text-xs">Chỉ 3 tuần</div>
+                    <div className="text-2xl">
+                      {promotion.displayDiscountPercent}%
+                    </div>
+                    <div className="text-xs">Giảm</div>
                   </div>
                 </motion.div>
               </div>

@@ -16,15 +16,19 @@ export default function AdminLoginForm({ onLoginSuccess }: LoginFormProps) {
     email: "",
     password: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       await auth.login(formData.email, formData.password);
       toast.success("Đăng nhập admin thành công!");
       onLoginSuccess();
     } catch (error) {
       toast.error("Đăng nhập thất bại: " + (error as Error).message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -56,8 +60,8 @@ export default function AdminLoginForm({ onLoginSuccess }: LoginFormProps) {
             required
           />
         </div>
-        <Button type="submit" className="w-full">
-          Đăng nhập
+        <Button type="submit" className="w-full" disabled={isLoading}>
+          {isLoading ? "Đang đăng nhập..." : "Đăng nhập"}
         </Button>
       </form>
     </div>

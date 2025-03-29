@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "Tố Quyên | Dịch vụ phun xăm chuyên nghiệp",
@@ -71,7 +72,10 @@ export default function RootLayout({
   return (
     <html lang="vi">
       <Analytics />
-      <body>{children}</body>
+      <body>
+        {children}
+        <Toaster richColors position="bottom-right" />
+      </body>
     </html>
   );
 }

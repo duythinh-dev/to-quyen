@@ -9,18 +9,7 @@ import { StaggerContainer } from "./animations/scroll-animation";
 import { useState, useEffect } from "react";
 
 import { FadeIn } from "./animations/scroll-animation";
-
-interface Service {
-  _id: string;
-  name: string;
-  description: string;
-  basePrice: number;
-  currentPrice: number;
-  image: string;
-  category: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import { Service } from "@/types";
 
 export default function ServiceSection() {
   const [services, setServices] = useState<Service[]>([]);
@@ -66,10 +55,10 @@ export default function ServiceSection() {
                 <ServiceCard
                   title={service.name}
                   description={service.description}
-                  price={formatPrice(service.currentPrice)}
+                  price={formatPrice(service.discountedPrice)}
                   image={service.image}
-                  originalPrice={formatPrice(service.basePrice)}
-                  isPromotion={service.currentPrice < service.basePrice}
+                  originalPrice={formatPrice(service.price)}
+                  isPromotion={service.isDiscounted}
                 />
               </StaggerItem>
             ))}

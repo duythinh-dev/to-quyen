@@ -28,12 +28,12 @@ interface Service {
   _id: string;
   name: string;
   description: string;
-  basePrice: number;
-  currentPrice: number;
+  price: number;
   image: string;
-  category: string;
   createdAt: string;
   updatedAt: string;
+  isDiscounted: boolean;
+  discountedPrice: number;
 }
 
 interface UploadResponse {
@@ -44,8 +44,28 @@ interface UploadResponse {
 // Thay đổi từ hardcode URL thành sử dụng env variable
 const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/services`;
 
-export default function ProductManager() {
-  const [services, setServices] = useState<Service[]>([]);
+interface ProductManagerProps {
+  data: any; // Thay 'any' bằng kiểu dữ liệu thực tế của products
+  onDataLoad: (data: any) => void;
+}
+
+const fetchProducts = async (): Promise<Service[]> => {
+  const token = auth.getToken();
+  const response = await fetch(API_URL, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.json();
+};
+
+export default function ProductManager({
+  data,
+  onDataLoad,
+}: ProductManagerProps) {
+  const [services, setServices] = useState<Service[]>(data || []);
+  const [isLoading, setIsLoading] = useState(!data);
+  const [error, setError] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [editingService, setEditingService] = useState<Service | null>(null);
   const [tempFile, setTempFile] = useState<File | null>(null);
@@ -53,10 +73,8 @@ export default function ProductManager() {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    basePrice: "",
-    currentPrice: "",
+    price: "",
     image: "",
-    category: "",
   });
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -64,10 +82,8 @@ export default function ProductManager() {
     setFormData({
       name: "",
       description: "",
-      basePrice: "",
-      currentPrice: "",
+      price: "",
       image: "",
-      category: "",
     });
     setEditingService(null);
     setTempFile(null);
@@ -81,7 +97,6 @@ export default function ProductManager() {
       if (!token) throw new Error("Chưa đăng nhập");
 
       let imageUrl = formData.image;
-
       if (tempFile) {
         imageUrl = await uploadImage(tempFile);
       }
@@ -89,8 +104,7 @@ export default function ProductManager() {
       const serviceData = {
         ...formData,
         image: imageUrl,
-        basePrice: parseFloat(formData.basePrice),
-        currentPrice: parseFloat(formData.currentPrice),
+        price: parseFloat(formData.price),
       };
 
       const url = editingService ? `${API_URL}/${editingService._id}` : API_URL;
@@ -133,10 +147,8 @@ export default function ProductManager() {
     setFormData({
       name: service.name,
       description: service.description,
-      basePrice: service.basePrice.toString(),
-      currentPrice: service.currentPrice.toString(),
+      price: service.price.toString(),
       image: service.image,
-      category: service.category,
     });
     setIsOpen(true);
   };
@@ -195,26 +207,32 @@ export default function ProductManager() {
   }, []);
 
   useEffect(() => {
-    const loadServices = async () => {
-      try {
-        const token = auth.getToken();
-        const response = await fetch(API_URL, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+    if (!data) {
+      setIsLoading(true);
+      fetchProducts()
+        .then((fetchedProducts) => {
+          setServices(fetchedProducts);
+          onDataLoad(fetchedProducts); // Lưu vào state của parent
+        })
+        .catch((err) => {
+          setError("Không thể tải dữ liệu sản phẩm");
+          console.error("Error fetching products:", err);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
-        if (!response.ok) throw new Error("Lỗi khi tải dịch vụ");
-        const data = await response.json();
-        setServices(data);
-      } catch (error) {
-        toast.error("Có lỗi khi tải dịch vụ");
-      }
-    };
-
-    if (isAuthenticated) {
-      loadServices();
+    } else {
+      setServices(data); // Sử dụng data từ props nếu có
     }
-  }, [isAuthenticated]);
+  }, [data, onDataLoad]);
+
+  if (isLoading) {
+    return <div>Đang tải...</div>;
+  }
+
+  if (error) {
+    return <div className="text-red-500">{error}</div>;
+  }
 
   if (!isAuthenticated) {
     return <LoginForm onLoginSuccess={() => setIsAuthenticated(true)} />;
@@ -255,26 +273,13 @@ export default function ProductManager() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="basePrice">Giá cơ bản</Label>
+                <Label htmlFor="price">Giá dịch vụ</Label>
                 <Input
-                  id="basePrice"
+                  id="price"
                   type="number"
-                  value={formData.basePrice}
+                  value={formData.price}
                   onChange={(e) =>
-                    setFormData({ ...formData, basePrice: e.target.value })
-                  }
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="currentPrice">Giá hiện tại</Label>
-                <Input
-                  id="currentPrice"
-                  type="number"
-                  value={formData.currentPrice}
-                  onChange={(e) =>
-                    setFormData({ ...formData, currentPrice: e.target.value })
+                    setFormData({ ...formData, price: e.target.value })
                   }
                   required
                 />
@@ -375,7 +380,11 @@ export default function ProductManager() {
                   {new Intl.NumberFormat("vi-VN", {
                     style: "currency",
                     currency: "VND",
-                  }).format(service.currentPrice)}
+                  }).format(
+                    service.isDiscounted
+                      ? service.discountedPrice
+                      : service.price
+                  )}
                 </span>
               </CardTitle>
             </CardHeader>
@@ -391,9 +400,6 @@ export default function ProductManager() {
                 </div>
               )}
               <p className="text-sm text-gray-600">{service.description}</p>
-              <div className="text-sm text-gray-500">
-                Danh mục: {service.category}
-              </div>
             </CardContent>
             <CardFooter className="flex justify-end gap-2">
               <Button

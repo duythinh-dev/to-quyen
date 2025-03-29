@@ -22,8 +22,25 @@ interface ImageItem {
   type?: string;
 }
 
-export default function GalleryManager() {
-  const [images, setImages] = useState<ImageItem[]>([]);
+interface GalleryManagerProps {
+  data: any; // Thay 'any' bằng kiểu dữ liệu thực tế của gallery
+  onDataLoad: (data: any) => void;
+}
+
+const fetchGallery = async (): Promise<ImageItem[]> => {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/customer-images`
+  );
+  return response.json();
+};
+
+export default function GalleryManager({
+  data,
+  onDataLoad,
+}: GalleryManagerProps) {
+  const [images, setImages] = useState<ImageItem[]>(data || []);
+  const [isLoading, setIsLoading] = useState(!data);
+  const [error, setError] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedCategory, setSelectedCategory] = useState("Phun xăm môi");
@@ -35,35 +52,31 @@ export default function GalleryManager() {
   const categories = ["Phun xăm môi", "Phun xăm mày", "Phun xăm mí"];
 
   const navigationTabs = ["all", ...categories, "Trước và Sau"];
-
+  console.log("data", data);
   const types = [
     { label: "Trước và sau", value: "before-after" },
     { label: "Kết quả", value: "result" },
   ];
 
-  const fetchImages = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/customer-images`
-      );
-      if (!response.ok) {
-        throw new Error("Failed to fetch images");
-      }
-      const data = await response.json();
-      setImages(data);
-    } catch (error) {
-      console.error("Fetch error:", error);
-      toast({
-        title: "Error",
-        description: "Không thể tải danh sách hình ảnh",
-        variant: "destructive",
-      });
-    }
-  };
-
   useEffect(() => {
-    fetchImages();
-  }, []);
+    if (!data) {
+      setIsLoading(true);
+      fetchGallery()
+        .then((fetchedImages) => {
+          setImages(fetchedImages);
+          onDataLoad(fetchedImages);
+        })
+        .catch((err) => {
+          setError("Không thể tải danh sách hình ảnh");
+          console.error("Error fetching images:", err);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    } else {
+      setImages(data);
+    }
+  }, [data, onDataLoad]);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.[0]) {
@@ -161,7 +174,11 @@ export default function GalleryManager() {
         throw new Error("Failed to update image");
       }
 
-      await fetchImages(); // Refresh the image list
+      const updatedImages = images.map((img) =>
+        img._id === editingImage._id ? { ...img, src: imageUrl } : img
+      );
+      setImages(updatedImages);
+      onDataLoad(updatedImages);
       setIsEditDialogOpen(false);
       setEditingImage(null);
       toast({
@@ -231,8 +248,10 @@ export default function GalleryManager() {
 
       const savedImage = await saveImageResponse.json();
 
-      // Fetch updated image list after successful upload
-      await fetchImages();
+      // Cập nhật state local và parent
+      const updatedImages = [...images, savedImage];
+      setImages(updatedImages);
+      onDataLoad(updatedImages);
 
       // Reset form
       setSelectedFile(null);
@@ -261,6 +280,14 @@ export default function GalleryManager() {
     if (activeTab === "Trước và Sau") return img.type === "before-after";
     return img.category === activeTab;
   });
+
+  if (isLoading) {
+    return <div>Đang tải...</div>;
+  }
+
+  if (error) {
+    return <div className="text-red-500">{error}</div>;
+  }
 
   return (
     <div className="space-y-6">
@@ -385,7 +412,7 @@ export default function GalleryManager() {
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {filteredImages.map((image) => (
+        {filteredImages.map((image: ImageItem) => (
           <div
             key={image._id}
             className="group relative aspect-square rounded-lg overflow-hidden border border-gray-200 bg-gray-100 shadow-sm hover:shadow-md transition-all duration-200"

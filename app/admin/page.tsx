@@ -9,13 +9,19 @@ import ProductManager from "@/components/admin/product-manager";
 import PromotionManager from "@/components/admin/promotion-manager";
 import GalleryManager from "@/components/admin/gallery-manager";
 import AdminLoginForm from "@/components/admin/login-form";
-import clsx from "clsx";
-import ImageUploader from "@/components/ImageUploader";
+import { ImageItem, Promotion, Service } from "@/types";
 
 export default function AdminPage() {
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
+
+  // Add states to store data for each tab
+  const [productsData, setProductsData] = useState<Service[] | null>(null);
+  const [galleryData, setGalleryData] = useState<ImageItem[] | null>(null);
+  const [promotionsData, setPromotionsData] = useState<Promotion[] | null>(
+    null
+  );
 
   if (!isAuthenticated) {
     return (
@@ -136,15 +142,20 @@ export default function AdminPage() {
         {/* Main Content */}
         <div className="flex-1 overflow-auto md:p-8 p-4 md:ml-0 mt-16 md:mt-0 bg-gray-50">
           <TabsContent value="products">
-            <ProductManager />
+            <ProductManager data={productsData} onDataLoad={setProductsData} />
           </TabsContent>
 
           <TabsContent value="promotions">
-            <PromotionManager />
+            <PromotionManager
+              data={promotionsData || []}
+              onDataLoad={setPromotionsData}
+              productsData={productsData || []}
+              onLoadServices={setProductsData}
+            />
           </TabsContent>
 
           <TabsContent value="gallery">
-            <GalleryManager />
+            <GalleryManager data={galleryData} onDataLoad={setGalleryData} />
           </TabsContent>
         </div>
       </Tabs>

@@ -172,7 +172,7 @@ export default async function Home() {
 
           {/* Stats Section */}
           {/* <StatsSection /> */}
-          {/* <PromotionsBanner /> */}
+          <PromotionsBanner />
 
           {/* Services Section */}
           <ServiceSection />
