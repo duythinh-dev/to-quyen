@@ -23,16 +23,27 @@ export default function AdminPage() {
     null
   );
 
+  const pageStyle = {
+    backgroundImage: "url('/my_love.JPG')",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+  };
+
   if (!isAuthenticated) {
     return (
-      <div className="container max-w-md mx-auto mt-20">
-        <AdminLoginForm onLoginSuccess={() => setIsAuthenticated(true)} />
+      <div className="min-h-screen" style={pageStyle}>
+        <div className="container max-w-md mx-auto pt-20">
+          <div className="bg-white/80 backdrop-blur-sm p-6 rounded-lg shadow-lg">
+            <AdminLoginForm onLoginSuccess={() => setIsAuthenticated(true)} />
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen" style={pageStyle}>
       <Tabs defaultValue="products" className="flex w-full">
         {/* Mobile Header */}
         <div className="fixed top-0 left-0 right-0 z-40 bg-white border-b md:hidden">
