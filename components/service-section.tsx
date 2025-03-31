@@ -23,6 +23,7 @@ export default function ServiceSection() {
       );
       const data = await response.json();
       setServices(data);
+      setIsLoading(false);
     };
     loadServices();
   }, []);
@@ -50,18 +51,37 @@ export default function ServiceSection() {
         </FadeIn>
         <StaggerContainer>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {services.map((service) => (
-              <StaggerItem key={service._id}>
-                <ServiceCard
-                  title={service.name}
-                  description={service.description}
-                  price={formatPrice(service.discountedPrice)}
-                  image={service.image}
-                  originalPrice={formatPrice(service.price)}
-                  isPromotion={service.isDiscounted}
-                />
-              </StaggerItem>
-            ))}
+            {isLoading ? (
+              // Loading skeletons
+              <>
+                {[1, 2, 3].map((i) => (
+                  <div
+                    key={i}
+                    className="rounded-lg border bg-card text-card-foreground shadow-sm"
+                  >
+                    <div className="aspect-[4/3] relative bg-muted animate-pulse" />
+                    <div className="p-6 space-y-4">
+                      <div className="h-4 bg-muted rounded animate-pulse w-3/4" />
+                      <div className="h-4 bg-muted rounded animate-pulse w-1/2" />
+                      <div className="h-4 bg-muted rounded animate-pulse w-1/4" />
+                    </div>
+                  </div>
+                ))}
+              </>
+            ) : (
+              services.map((service) => (
+                <StaggerItem key={service._id}>
+                  <ServiceCard
+                    title={service.name}
+                    description={service.description}
+                    price={formatPrice(service.discountedPrice)}
+                    image={service.image}
+                    originalPrice={formatPrice(service.price)}
+                    isPromotion={service.isDiscounted}
+                  />
+                </StaggerItem>
+              ))
+            )}
           </div>
         </StaggerContainer>
       </div>

@@ -80,7 +80,16 @@ export default function GallerySection() {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {loading ? (
-          <div className="col-span-full text-center py-10">Đang tải...</div>
+          // Loading skeletons
+          <>
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div
+                key={i}
+                className="overflow-hidden rounded-lg bg-muted animate-pulse"
+                style={{ height: "256px" }} // matches the h-64 class of actual images
+              />
+            ))}
+          </>
         ) : (
           filteredImages.map((image, index) => (
             <div
