@@ -359,7 +359,7 @@ export default function PromotionManager({
   };
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="p-2 space-y-1 md:p-6 md:space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Quản lý Khuyến mãi</h2>
         <Button onClick={() => setIsFormOpen(true)}>Thêm Khuyến mãi</Button>
@@ -448,7 +448,7 @@ export default function PromotionManager({
                 )}
                 <div className="flex justify-between items-center">
                   <CardTitle>{promotion.title}</CardTitle>
-                  <div className="flex gap-2">
+                  <div className="hidden md:flex gap-2">
                     <Button
                       variant="outline"
                       size="sm"
@@ -526,6 +526,24 @@ export default function PromotionManager({
                         : "Đã kết thúc"}
                     </p>
                   </div>
+                  <div className="flex md:hidden gap-2 pt-4">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleEdit(promotion)}
+                      className="flex-1"
+                    >
+                      Chỉnh sửa
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => handleDelete(promotion._id)}
+                      className="flex-1"
+                    >
+                      Xóa
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -540,8 +558,8 @@ export default function PromotionManager({
           setIsFormOpen(open);
         }}
       >
-        <DialogContent className="max-w-5xl max-h-[90vh] flex flex-col overflow-hidden">
-          <DialogHeader className="pb-4 border-b flex-shrink-0">
+        <DialogContent className="max-w-5xl h-screen md:h-auto md:max-h-[90vh] flex flex-col overflow-hidden p-0 md:p-6 gap-0">
+          <DialogHeader className="p-4 md:p-0 md:pb-4 border-b flex-shrink-0">
             <DialogTitle className="text-2xl">
               {selectedPromotion
                 ? "Chỉnh sửa khuyến mãi"
@@ -552,12 +570,12 @@ export default function PromotionManager({
             onSubmit={handleSubmit}
             className="flex flex-col flex-1 overflow-hidden"
           >
-            <div className="flex-1 overflow-y-auto">
-              <div className="grid grid-cols-2 gap-8 py-6">
+            <div className="flex-1 overflow-y-auto px-4 md:px-0">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 py-6">
                 {/* Left column - Image */}
-                <div className="space-y-6">
+                <div className="space-y-4 md:space-y-6">
                   <div>
-                    <Label className="text-lg font-semibold mb-4">
+                    <Label className="text-base md:text-lg font-semibold mb-4">
                       Hình ảnh khuyến mãi
                     </Label>
                     <div className="mt-2 border-2 border-dashed rounded-xl bg-gray-50/50">
@@ -614,9 +632,9 @@ export default function PromotionManager({
                     </div>
                   </div>
 
-                  <div className="space-y-4 bg-gray-50/50 p-4 rounded-lg">
+                  <div className="space-y-4 bg-gray-50/50 p-3 md:p-4 rounded-lg">
                     <h3 className="font-medium">Thời gian khuyến mãi</h3>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-3 md:gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="startDate">Ngày bắt đầu</Label>
                         <Input
@@ -655,10 +673,13 @@ export default function PromotionManager({
                 </div>
 
                 {/* Right column - Form fields */}
-                <div className="space-y-6 overflow-y-auto">
+                <div className="space-y-4 md:space-y-6">
                   <div className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="title" className="text-lg font-semibold">
+                      <Label
+                        htmlFor="title"
+                        className="text-base md:text-lg font-semibold"
+                      >
                         Thông tin khuyến mãi
                       </Label>
                       <Input
@@ -691,7 +712,7 @@ export default function PromotionManager({
 
                     <div className="space-y-2">
                       <Label>Chi tiết khuyến mãi</Label>
-                      <div className="space-y-3 bg-gray-50/50 p-4 rounded-lg">
+                      <div className="space-y-3 bg-gray-50/50 p-3 md:p-4 rounded-lg">
                         {formData.details.map((detail, index) => (
                           <div key={index} className="flex gap-2">
                             <Input
@@ -729,16 +750,17 @@ export default function PromotionManager({
 
                     <div className="space-y-3">
                       <Label>Giá dịch vụ khuyến mãi</Label>
-                      <div className="space-y-3 bg-gray-50/50 p-4 rounded-lg">
+                      <div className="space-y-3 bg-gray-50/50 p-3 md:p-4 rounded-lg">
                         {services.map((service) => {
                           const discount = formData.serviceDiscounts.find(
                             (d) => d.serviceId === service._id
                           );
+                          console.log("discountedPrice", discount);
 
                           return (
                             <div
                               key={service._id}
-                              className="grid grid-cols-2 gap-4 items-center bg-white p-3 rounded-md shadow-sm"
+                              className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-4 items-center bg-white p-3 rounded-md shadow-sm"
                             >
                               <div>
                                 <Label className="font-medium">
@@ -753,8 +775,8 @@ export default function PromotionManager({
                                 <Input
                                   type="text"
                                   value={
-                                    discount?.discountedPrice
-                                      ? discount.discountedPrice.toLocaleString()
+                                    service?.discountedPrice
+                                      ? service.discountedPrice.toLocaleString()
                                       : ""
                                   }
                                   onChange={(e) => {
@@ -803,7 +825,7 @@ export default function PromotionManager({
               </div>
             </div>
 
-            <div className="flex justify-end gap-4 pt-4 border-t mt-auto flex-shrink-0 bg-white">
+            <div className="flex justify-end gap-4 p-4 md:pt-4 border-t mt-auto flex-shrink-0 bg-white">
               <Button
                 type="button"
                 variant="outline"
@@ -812,13 +834,14 @@ export default function PromotionManager({
                   resetForm();
                 }}
                 disabled={isLoading}
+                className="flex-1 md:flex-none"
               >
                 Hủy
               </Button>
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="min-w-[120px]"
+                className="flex-1 md:flex-none md:min-w-[120px]"
               >
                 {isLoading ? (
                   <div className="flex items-center gap-2">
