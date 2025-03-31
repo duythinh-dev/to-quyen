@@ -63,6 +63,8 @@ export default function PromotionManager({
         promo.promoCode?.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
+  const isLoadingInitial = isLoading && !isInitialized;
+
   const fetchPromotions = async () => {
     if (isInitialized) return;
 
@@ -384,105 +386,152 @@ export default function PromotionManager({
         </select>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {filteredPromotions.map((promotion) => (
-          <Card key={promotion._id}>
-            <CardHeader>
-              {promotion.image && (
-                <div className="relative aspect-video w-full mb-4">
-                  <Image
-                    src={promotion.image}
-                    alt={promotion.title}
-                    fill
-                    className="object-cover rounded-lg"
-                  />
+      {isLoadingInitial ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {[1, 2, 3, 4].map((i) => (
+            <Card key={i} className="animate-pulse">
+              <CardHeader>
+                <div className="h-48 bg-gray-200 rounded-lg mb-4" />
+                <div className="h-6 bg-gray-200 rounded w-3/4" />
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="h-4 bg-gray-200 rounded w-full" />
+                  <div className="h-4 bg-gray-200 rounded w-5/6" />
+                  <div className="h-4 bg-gray-200 rounded w-4/6" />
                 </div>
-              )}
-              <div className="flex justify-between items-center">
-                <CardTitle>{promotion.title}</CardTitle>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleEdit(promotion)}
-                  >
-                    Chỉnh sửa
-                  </Button>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => handleDelete(promotion._id)}
-                  >
-                    Xóa
-                  </Button>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <p>{promotion.description}</p>
-                {promotion.details.length > 0 && (
-                  <div className="mt-2">
-                    <p className="font-medium">Chi tiết:</p>
-                    <ul className="list-disc pl-5 space-y-1">
-                      {promotion.details.map((detail, index) => (
-                        <li key={index}>{detail}</li>
-                      ))}
-                    </ul>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      ) : filteredPromotions.length === 0 ? (
+        <div className="text-center py-12">
+          <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
+            <svg
+              className="w-8 h-8 text-gray-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m6 4.125l2.25 2.25m0 0l2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"
+              />
+            </svg>
+          </div>
+          <h3 className="text-lg font-medium text-gray-900 mb-1">
+            Chưa có khuyến mãi nào
+          </h3>
+          <p className="text-gray-500 mb-4">
+            {searchQuery || filterStatus !== "all"
+              ? "Không tìm thấy khuyến mãi nào phù hợp với bộ lọc"
+              : "Hãy bắt đầu bằng việc thêm khuyến mãi đầu tiên của bạn"}
+          </p>
+          <Button onClick={() => setIsFormOpen(true)}>Thêm Khuyến mãi</Button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {filteredPromotions.map((promotion) => (
+            <Card key={promotion._id}>
+              <CardHeader>
+                {promotion.image && (
+                  <div className="relative aspect-video w-full mb-4">
+                    <Image
+                      src={promotion.image}
+                      alt={promotion.title}
+                      fill
+                      className="object-cover rounded-lg"
+                    />
                   </div>
                 )}
-                <div className="mt-2">
-                  <p className="font-medium">Giá khuyến mãi:</p>
-                  <div className="space-y-1">
-                    {promotion.serviceDiscounts.map((discount) => {
-                      const service = services.find(
-                        (s) => s._id === discount.serviceId
-                      );
-                      const discountPercent = (
-                        ((discount.originalPrice - discount.discountedPrice) /
-                          discount.originalPrice) *
-                        100
-                      ).toFixed(0);
-
-                      return (
-                        <div key={discount.serviceId} className="text-sm">
-                          <span>{service?.name}: </span>
-                          <span className="line-through text-gray-500">
-                            {discount.originalPrice.toLocaleString()}đ
-                          </span>
-                          <span className="mx-2">→</span>
-                          <span className="font-medium">
-                            {discount.discountedPrice.toLocaleString()}đ
-                          </span>
-                          <span className="text-green-600 ml-2">
-                            (-{discountPercent}%)
-                          </span>
-                        </div>
-                      );
-                    })}
+                <div className="flex justify-between items-center">
+                  <CardTitle>{promotion.title}</CardTitle>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleEdit(promotion)}
+                    >
+                      Chỉnh sửa
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => handleDelete(promotion._id)}
+                    >
+                      Xóa
+                    </Button>
                   </div>
                 </div>
-                <div className="text-sm text-gray-500">
-                  <p>
-                    Thời gian:{" "}
-                    {new Date(promotion.startDate).toLocaleDateString()} -{" "}
-                    {new Date(promotion.endDate).toLocaleDateString()}
-                  </p>
-                  {promotion.promoCode && <p>Mã: {promotion.promoCode}</p>}
-                  <p>
-                    Trạng thái:{" "}
-                    {promotion.status === "active"
-                      ? "Đang chạy"
-                      : promotion.status === "upcoming"
-                      ? "Sắp diễn ra"
-                      : "Đã kết thúc"}
-                  </p>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <p>{promotion.description}</p>
+                  {promotion.details.length > 0 && (
+                    <div className="mt-2">
+                      <p className="font-medium">Chi tiết:</p>
+                      <ul className="list-disc pl-5 space-y-1">
+                        {promotion.details.map((detail, index) => (
+                          <li key={index}>{detail}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  <div className="mt-2">
+                    <p className="font-medium">Giá khuyến mãi:</p>
+                    <div className="space-y-1">
+                      {promotion.serviceDiscounts.map((discount) => {
+                        const service = services.find(
+                          (s) => s._id === discount.serviceId
+                        );
+                        const discountPercent = (
+                          ((discount.originalPrice - discount.discountedPrice) /
+                            discount.originalPrice) *
+                          100
+                        ).toFixed(0);
+
+                        return (
+                          <div key={discount.serviceId} className="text-sm">
+                            <span>{service?.name}: </span>
+                            <span className="line-through text-gray-500">
+                              {discount.originalPrice.toLocaleString()}đ
+                            </span>
+                            <span className="mx-2">→</span>
+                            <span className="font-medium">
+                              {discount.discountedPrice.toLocaleString()}đ
+                            </span>
+                            <span className="text-green-600 ml-2">
+                              (-{discountPercent}%)
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    <p>
+                      Thời gian:{" "}
+                      {new Date(promotion.startDate).toLocaleDateString()} -{" "}
+                      {new Date(promotion.endDate).toLocaleDateString()}
+                    </p>
+                    {promotion.promoCode && <p>Mã: {promotion.promoCode}</p>}
+                    <p>
+                      Trạng thái:{" "}
+                      {promotion.status === "active"
+                        ? "Đang chạy"
+                        : promotion.status === "upcoming"
+                        ? "Sắp diễn ra"
+                        : "Đã kết thúc"}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
 
       <Dialog
         open={isFormOpen}

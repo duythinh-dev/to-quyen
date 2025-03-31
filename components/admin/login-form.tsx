@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { auth } from "@/lib/auth";
 import { toast } from "sonner";
+import crypto from "crypto";
 
 interface LoginFormProps {
   onLoginSuccess: () => void;
@@ -22,7 +23,8 @@ export default function AdminLoginForm({ onLoginSuccess }: LoginFormProps) {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await auth.login(formData.email, formData.password);
+      const userData = await auth.login(formData.email, formData.password);
+      localStorage.setItem("adminToken", userData.token);
       toast.success("Đăng nhập admin thành công!");
       onLoginSuccess();
     } catch (error) {

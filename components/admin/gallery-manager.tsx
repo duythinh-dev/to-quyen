@@ -282,7 +282,34 @@ export default function GalleryManager({
   });
 
   if (isLoading) {
-    return <div>Đang tải...</div>;
+    return (
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <div className="h-8 w-48 bg-gray-200 rounded animate-pulse" />
+          <div className="h-10 w-32 bg-gray-200 rounded animate-pulse" />
+        </div>
+
+        <div className="border-b border-gray-200">
+          <div className="flex space-x-4">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div
+                key={i}
+                className="h-10 w-24 bg-gray-200 rounded animate-pulse"
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+            <div
+              key={i}
+              className="aspect-square rounded-lg bg-gray-200 animate-pulse"
+            />
+          ))}
+        </div>
+      </div>
+    );
   }
 
   if (error) {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
@@ -14,6 +14,7 @@ import { ImageItem, Promotion, Service } from "@/types";
 export default function AdminPage() {
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 
   // Add states to store data for each tab
@@ -30,12 +31,69 @@ export default function AdminPage() {
     backgroundRepeat: "no-repeat",
   };
 
+  const getProfile = async () => {
+    const token = localStorage.getItem("adminToken");
+    if (!token) {
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/users/profile`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Unauthorized");
+      }
+
+      const data = await response.json();
+      if (data.email) setIsAuthenticated(true);
+      console.log(data);
+    } catch (error) {
+      console.error("Error:", error);
+      localStorage.removeItem("token");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getProfile();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={pageStyle}
+      >
+        <div className="bg-white/80 backdrop-blur-sm p-8 rounded-lg shadow-lg flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900" />
+          <span className="text-gray-700 font-medium">Đang tải...</span>
+        </div>
+      </div>
+    );
+  }
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen" style={pageStyle}>
         <div className="container max-w-md mx-auto pt-20">
           <div className="bg-white/80 backdrop-blur-sm p-6 rounded-lg shadow-lg">
-            <AdminLoginForm onLoginSuccess={() => setIsAuthenticated(true)} />
+            <AdminLoginForm
+              onLoginSuccess={() => {
+                setIsAuthenticated(true);
+                getProfile();
+              }}
+            />
           </div>
         </div>
       </div>

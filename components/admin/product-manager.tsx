@@ -22,7 +22,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import Image from "next/image";
 import { auth } from "@/lib/auth";
-import LoginForm from "./login-form";
 
 interface Service {
   _id: string;
@@ -76,7 +75,6 @@ export default function ProductManager({
     price: "",
     image: "",
   });
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const resetForm = () => {
     setFormData({
@@ -202,11 +200,6 @@ export default function ProductManager({
   };
 
   useEffect(() => {
-    const token = auth.getToken();
-    setIsAuthenticated(!!token);
-  }, []);
-
-  useEffect(() => {
     if (!data) {
       setIsLoading(true);
       fetchProducts()
@@ -227,15 +220,45 @@ export default function ProductManager({
   }, [data, onDataLoad]);
 
   if (isLoading) {
-    return <div>Đang tải...</div>;
+    return (
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <h2 className="text-2xl font-bold">Quản lý Dịch vụ</h2>
+          <div className="w-32 h-10 bg-gray-200 animate-pulse rounded-md" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, index) => (
+            <Card key={index} className="animate-pulse">
+              <CardHeader>
+                <div className="h-6 bg-gray-200 rounded w-3/4" />
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="h-48 bg-gray-200 rounded-md w-full" />
+                <div className="space-y-2">
+                  <div className="h-4 bg-gray-200 rounded w-full" />
+                  <div className="h-4 bg-gray-200 rounded w-2/3" />
+                </div>
+              </CardContent>
+              <CardFooter className="flex justify-end gap-2">
+                <div className="w-16 h-8 bg-gray-200 rounded" />
+                <div className="w-16 h-8 bg-gray-200 rounded" />
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="text-red-500">{error}</div>;
-  }
-
-  if (!isAuthenticated) {
-    return <LoginForm onLoginSuccess={() => setIsAuthenticated(true)} />;
+    return (
+      <div className="flex items-center justify-center h-[50vh]">
+        <div className="text-center space-y-2">
+          <div className="text-red-500 text-xl">{error}</div>
+          <Button onClick={() => window.location.reload()}>Thử lại</Button>
+        </div>
+      </div>
+    );
   }
 
   return (
