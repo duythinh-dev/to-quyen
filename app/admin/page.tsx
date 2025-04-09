@@ -59,7 +59,7 @@ export default function AdminPage() {
       console.log(data);
     } catch (error) {
       console.error("Error:", error);
-      localStorage.removeItem("token");
+      localStorage.removeItem("adminToken");
     } finally {
       setIsLoading(false);
     }
