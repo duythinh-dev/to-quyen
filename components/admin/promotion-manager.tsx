@@ -57,11 +57,15 @@ export default function PromotionManager({
 
   const filteredPromotions = promotions
     .filter((promo) => filterStatus === "all" || promo.status === filterStatus)
-    .filter(
-      (promo) =>
-        promo.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        promo.promoCode?.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    .filter((promo) => {
+      if (!searchQuery.trim()) return true;
+
+      const searchTerm = searchQuery.toLowerCase().trim();
+      const title = promo.title?.toLowerCase() || "";
+      const promoCode = promo.promoCode?.toLowerCase() || "";
+
+      return title.includes(searchTerm) || promoCode.includes(searchTerm);
+    });
 
   const isLoadingInitial = isLoading && !isInitialized;
 
@@ -367,7 +371,7 @@ export default function PromotionManager({
 
       <div className="flex gap-4">
         <Input
-          placeholder="Tìm kiếm..."
+          placeholder="Tìm kiếm theo tên hoặc mã khuyến mãi..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="max-w-xs"
@@ -517,13 +521,23 @@ export default function PromotionManager({
                       {new Date(promotion.endDate).toLocaleDateString()}
                     </p>
                     {promotion.promoCode && <p>Mã: {promotion.promoCode}</p>}
-                    <p>
+                    <p className="flex items-center gap-2">
                       Trạng thái:{" "}
-                      {promotion.status === "active"
-                        ? "Đang chạy"
-                        : promotion.status === "upcoming"
-                        ? "Sắp diễn ra"
-                        : "Đã kết thúc"}
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          promotion.status === "active"
+                            ? "bg-green-100 text-green-700"
+                            : promotion.status === "upcoming"
+                            ? "bg-blue-100 text-blue-700"
+                            : "bg-gray-100 text-gray-700"
+                        }`}
+                      >
+                        {promotion.status === "active"
+                          ? "Đang chạy"
+                          : promotion.status === "upcoming"
+                          ? "Sắp diễn ra"
+                          : "Đã kết thúc"}
+                      </span>
                     </p>
                   </div>
                   <div className="flex md:hidden gap-2 pt-4">

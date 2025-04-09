@@ -25,7 +25,7 @@ export const auth = {
     }
 
     const data = await response.json();
-    localStorage.setItem("token", data.token);
+    localStorage.setItem("adminToken", data.token);
     return data;
   },
 
@@ -47,18 +47,18 @@ export const auth = {
     }
 
     const data = await response.json();
-    localStorage.setItem("token", data.token);
+    localStorage.setItem("adminToken", data.token);
     return data;
   },
 
   getToken: (): string | null => {
     if (typeof window !== "undefined") {
-      return localStorage.getItem("token");
+      return localStorage.getItem("adminToken");
     }
     return null;
   },
 
   logout: (): void => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("adminToken");
   },
 };

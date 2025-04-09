@@ -9,7 +9,7 @@ export async function uploadImage(file: File) {
       {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`, // Giả sử token được lưu trong localStorage
+          Authorization: `Bearer ${localStorage.getItem("adminToken")}`, // Giả sử token được lưu trong localStorage
         },
         body: formData,
       }
