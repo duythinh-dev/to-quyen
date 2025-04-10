@@ -22,6 +22,9 @@ export default function PromotionsBanner() {
           }
         );
         const promotionDetails = await response.json();
+        console.log(response);
+        if (!response.ok) return;
+
         //   {
         //     "_id": "67e60e7574aac3b8c83a7138",
         //     "title": "Happy Weekend - Ưu đãi cuối tuần",
